@@ -11,26 +11,37 @@ export const Wrapper = styled.div`
 
 export const Content = styled.div`
   width: 100%;
-  max-width: 315px;
+  max-width: 360px;
   text-align: center;
+  background: #fff;
+  padding: 50px 30px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 
   form {
     display: flex;
     flex-direction: column;
-    margin-top: 30px;
+    margin-top: 20px;
 
     input {
-      background: rgba(0, 0, 0, 0.1);
-      border: 0;
       border-radius: 4px;
+      border: solid 1px #dddddd;
+      background-color: #ffffff;
       height: 44px;
       padding: 0 15px;
-      color: #fff;
+      color: ${darken(0.3, '#999999')};
       margin: 0 0 10px;
 
       &::placeholder {
-        color: rgba(255, 255, 255, 0.7);
+        color: #999999;
       }
+    }
+
+    strong {
+      text-align: left;
+      padding-bottom: 8px;
+      padding-top: 10px;
+      text-transform: uppercase;
     }
 
     span {
@@ -43,7 +54,7 @@ export const Content = styled.div`
     button {
       margin: 5px 0 0;
       height: 44px;
-      background: #3b9eff;
+      background-color: #ee4d64;
       font-weight: bold;
       color: #fff;
       border: 0;
@@ -52,7 +63,7 @@ export const Content = styled.div`
       transition: background 0.2s;
 
       &:hover {
-        background: ${darken(0.03, '#3b9eff')};
+        background: ${darken(0.03, '#ee4d64')};
       }
     }
 
