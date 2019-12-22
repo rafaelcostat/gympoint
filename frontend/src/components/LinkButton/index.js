@@ -11,6 +11,7 @@ const LinkButton = styled(Link)`
   align-items: center;
   transition: all 300ms;
   padding: 0 16px;
+  margin-left: 16px;
 
   &:hover {
     background: ${props => darken(0.03, props.color)};
@@ -18,6 +19,8 @@ const LinkButton = styled(Link)`
 
   span {
     font-weight: bold;
+    padding-left: 4px;
+    text-transform: uppercase;
   }
 `;
 
