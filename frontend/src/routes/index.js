@@ -6,6 +6,7 @@ import Students from '../pages/Students/Index';
 import StudentForm from '../pages/Students/Form';
 import Plans from '../pages/Plans/Index';
 import PlanForm from '../pages/Plans/Form';
+import HelpOrders from '../pages/HelpOrders';
 
 import Route from './Route';
 
@@ -21,6 +22,8 @@ export default function Routes() {
       <Route path="/plans/new" component={PlanForm} isPrivate />
       <Route path="/plans/:id" component={PlanForm} isPrivate />
       <Route path="/plans" component={Plans} isPrivate />
+
+      <Route path="/help-orders" component={HelpOrders} isPrivate />
 
       <Route path="/" component={() => <h1>404</h1>} />
     </Switch>
