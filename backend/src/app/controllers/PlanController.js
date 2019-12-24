@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import Plan from '../models/Plan';
+import { Op } from 'sequelize';
 
 class PlanController {
   async store(req, res) {
@@ -28,9 +29,12 @@ class PlanController {
   }
 
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, q: query = '' } = req.query;
     const plans = await Plan.findAll({
       order: ['id'],
+      where: {
+        [Op.or]: [{ title: { [Op.iLike]: `%${query}%` } }],
+      },
       limit: 20,
       offset: (page - 1) * 20,
     });

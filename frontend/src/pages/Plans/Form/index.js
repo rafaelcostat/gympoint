@@ -72,9 +72,9 @@ export default function PlanForm() {
   }
 
   return (
-    <Container>
+    <Container width="900px">
       <Header>
-        <h1>Edição de aluno</h1>
+        <h1>{id ? 'Edição de plano' : 'Cadastro de plano'}</h1>
         <div>
           <LinkButton to="/plans" color="#ccc">
             <MdArrowBack size={20} color="#FFF" />

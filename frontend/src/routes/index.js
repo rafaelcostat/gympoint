@@ -7,6 +7,8 @@ import StudentForm from '../pages/Students/Form';
 import Plans from '../pages/Plans/Index';
 import PlanForm from '../pages/Plans/Form';
 import HelpOrders from '../pages/HelpOrders';
+import Enrollments from '../pages/Enrollments/Index';
+import EnrollmentForm from '../pages/Enrollments/Form';
 
 import Route from './Route';
 
@@ -22,6 +24,10 @@ export default function Routes() {
       <Route path="/plans/new" component={PlanForm} isPrivate />
       <Route path="/plans/:id" component={PlanForm} isPrivate />
       <Route path="/plans" component={Plans} isPrivate />
+
+      <Route path="/enrollments/new" component={EnrollmentForm} isPrivate />
+      <Route path="/enrollments/:id" component={EnrollmentForm} isPrivate />
+      <Route path="/enrollments" component={Enrollments} isPrivate />
 
       <Route path="/help-orders" component={HelpOrders} isPrivate />
 

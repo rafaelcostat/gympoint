@@ -12,6 +12,10 @@ const FormWrapper = styled.div`
 
     & > div {
       display: flex;
+      margin-bottom: 10px;
+      &:last-child {
+        margin-bottom: 0;
+      }
       & > div {
         display: flex;
         flex: 1;
@@ -31,9 +35,14 @@ const FormWrapper = styled.div`
       padding: 0 15px;
       color: ${darken(0.3, '#999999')};
       margin: 0 0 10px;
+      width: 100%;
 
       &::placeholder {
         color: #999999;
+      }
+
+      &:disabled {
+        background: #f5f5f5;
       }
     }
 
@@ -43,6 +52,7 @@ const FormWrapper = styled.div`
       padding-top: 10px;
       text-transform: uppercase;
       font-weight: bold;
+      color: #444444;
     }
   }
 `;

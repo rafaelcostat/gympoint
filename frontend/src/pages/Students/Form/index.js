@@ -1,6 +1,8 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
+import { parseISO } from 'date-fns';
 
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -8,8 +10,9 @@ import { toast } from 'react-toastify';
 
 import Container from '~/components/Container';
 import Header from '~/components/PageHeader';
-import { Content } from './styles';
+import FormWrapper from '~/components/FormWrapper';
 import LinkButton from '~/components/LinkButton';
+import DatePicker from '~/components/DatePickerInput';
 
 import api from '~/services/api';
 import history from '~/services/history';
@@ -33,9 +36,12 @@ export default function StudentForm() {
       try {
         const { data } = await api.get(`students/${id}`);
 
-        setStudent(data);
+        setStudent({
+          ...data,
+          birth: parseISO(data.birth),
+        });
       } catch (err) {
-        toast.error(err.response.data.error);
+        toast.error('Erro ao carregar o aluno');
       }
     }
 
@@ -71,9 +77,9 @@ export default function StudentForm() {
   }
 
   return (
-    <Container>
+    <Container width="900px">
       <Header>
-        <h1>Edição de aluno</h1>
+        <h1>{id ? 'Edição de aluno' : 'Cadastro de aluno'}</h1>
         <div>
           <LinkButton to="/students" color="#ccc">
             <MdArrowBack size={20} color="#FFF" />
@@ -85,14 +91,14 @@ export default function StudentForm() {
           </button>
         </div>
       </Header>
-      <Content>
+      <FormWrapper>
         <Form
           id="my-form"
           schema={schema}
           initialData={student}
           onSubmit={handleSubmit}
         >
-          <strong>Nome completo</strong>
+          <label htmlFor="name">Nome completo</label>
           <Input
             name="name"
             id="name"
@@ -100,7 +106,7 @@ export default function StudentForm() {
             placeholder="Nome completo"
           />
 
-          <strong>Endereço de e-email</strong>
+          <label htmlFor="email">Endereço de e-email</label>
           <Input
             name="email"
             id="email"
@@ -110,15 +116,14 @@ export default function StudentForm() {
 
           <div>
             <div>
-              <strong>Data nascimento</strong>
-              <Input name="birth" id="birth" />
+              <DatePicker name="birth" label="DATA DE NASCIMENTO" />
             </div>
             <div>
-              <strong>Peso (em kg)</strong>
+              <label htmlFor="weight">Peso (em kg)</label>
               <Input name="weight" id="weight" type="text" placeholder="Peso" />
             </div>
             <div>
-              <strong>Altura</strong>
+              <label htmlFor="height">Altura</label>
               <Input
                 name="height"
                 id="height"
@@ -128,7 +133,7 @@ export default function StudentForm() {
             </div>
           </div>
         </Form>
-      </Content>
+      </FormWrapper>
     </Container>
   );
 }
