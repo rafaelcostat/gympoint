@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdSearch } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
-import { Content } from './styles';
+import { Content, Search } from './styles';
 import Container from '~/components/Container';
 import Header from '~/components/PageHeader';
 import { Table, EditLink, DeleteButton } from '~/components/Table';
@@ -21,7 +21,6 @@ export default function Students() {
       const response = await api.get('students');
 
       setStudents(response.data);
-
       setLoading(false);
     }
 
@@ -50,6 +49,22 @@ export default function Students() {
     }
   }
 
+  async function fecthStudents(search) {
+    try {
+      const { data } = await api.get('students', {
+        params: { q: search },
+      });
+
+      setStudents(data);
+    } catch (err) {
+      toast.error(err);
+    }
+  }
+
+  function handleSearch(e) {
+    fecthStudents(e.target.value);
+  }
+
   return (
     <Container>
       <Header>
@@ -59,6 +74,14 @@ export default function Students() {
             <MdAdd size={20} color="#FFF" />
             <span>CADASTRAR</span>
           </LinkButton>
+          <Search>
+            <MdSearch color="#999999" size={16} />
+            <input
+              name="studentName"
+              placeholder="Buscar aluno"
+              onChange={handleSearch}
+            />
+          </Search>
         </div>
       </Header>
       <Content>
