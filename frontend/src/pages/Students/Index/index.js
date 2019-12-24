@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MdAdd } from 'react-icons/md';
+import { toast } from 'react-toastify';
 
 import { Content } from './styles';
 import Container from '~/components/Container';
@@ -27,7 +28,27 @@ export default function Students() {
     loadStudents();
   }, []);
 
-  function handleDeleteStudent() {}
+  async function deleteStudent(student) {
+    try {
+      await api.delete(`/students/${student.id}`);
+
+      toast.success('Aluno excluído com sucesso.');
+
+      setStudents(
+        students.filter(currentStudent => currentStudent.id !== student.id)
+      );
+    } catch (error) {
+      toast.error('Não foi possível excluir este aluno.');
+    }
+  }
+
+  function handleDeleteStudent(student) {
+    const del = window.confirm('Deseja realmente excluir o aluno?');
+
+    if (del) {
+      deleteStudent(student);
+    }
+  }
 
   return (
     <Container>

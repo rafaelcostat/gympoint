@@ -49,7 +49,29 @@ export default function Enrollments() {
     loadEnrollments();
   }, []);
 
-  function handleDeleteEnrollment() {}
+  async function deleteEnrollment(enrollment) {
+    try {
+      await api.delete(`/enrollments/${enrollment.id}`);
+
+      toast.success('Matrícula excluída com sucesso.');
+
+      setEnrollments(
+        enrollments.filter(
+          currentEnrollment => currentEnrollment.id !== enrollment.id
+        )
+      );
+    } catch (_) {
+      toast.error('Não foi possível excluir esta matrícula.');
+    }
+  }
+
+  function handleDeleteEnrollment(enrollment) {
+    const del = window.confirm('Deseja realmente excluir a matrícula?');
+
+    if (del) {
+      deleteEnrollment(enrollment);
+    }
+  }
 
   return (
     <Container>

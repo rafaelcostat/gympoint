@@ -47,10 +47,28 @@ export default function Plans() {
     loadPlans();
   }, []);
 
-  function handleDeletePlan() {}
+  async function deletePlan(plan) {
+    try {
+      await api.delete(`/plans/${plan.id}`);
+
+      toast.success('Plano excluído com sucesso.');
+
+      setPlans(plans.filter(currentPlan => currentPlan.id !== plan.id));
+    } catch (error) {
+      toast.error('Não foi possível excluir este plano.');
+    }
+  }
+
+  function handleDeletePlan(plan) {
+    const del = window.confirm('Deseja realmente excluir o plano?');
+
+    if (del) {
+      deletePlan(plan);
+    }
+  }
 
   return (
-    <Container>
+    <Container width="900px">
       <Header>
         <h1>Gereciando planos</h1>
         <div>
