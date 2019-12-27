@@ -3,6 +3,9 @@ import Enrollment from '../models/Enrollment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
 
+import EnrollmentMail from '../jobs/EnrollmentMail';
+import Queue from '../../lib/Queue';
+
 class EnrollmentController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -31,6 +34,15 @@ class EnrollmentController {
       student_id,
       plan_id,
       start_date,
+    });
+
+    const student = await Student.findByPk(student_id);
+    const plan = await Plan.findByPk(plan_id);
+
+    await Queue.add(EnrollmentMail.key, {
+      student,
+      plan,
+      enrollment,
     });
 
     return res.json(enrollment);

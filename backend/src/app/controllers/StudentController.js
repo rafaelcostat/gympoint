@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import Student from '../models/Student';
 import { Op } from 'sequelize';
+import Student from '../models/Student';
 
 class StudentController {
   async index(req, res) {

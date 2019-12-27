@@ -3,6 +3,9 @@ import * as Yup from 'yup';
 import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
 
+import HelpOrderMail from '../jobs/HelpOrderMail';
+import Queue from '../../lib/Queue';
+
 class HelpOrderController {
   async update(req, res) {
     const schema = Yup.object().shape({
@@ -28,6 +31,10 @@ class HelpOrderController {
 
     await helpOrder.update({ answer, answer_at: new Date() });
     await helpOrder.save();
+
+    await Queue.add(HelpOrderMail.key, {
+      helpOrder,
+    });
 
     return res.json(helpOrder);
   }
