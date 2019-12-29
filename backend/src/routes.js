@@ -26,13 +26,14 @@ routes.post('/students/:id/checkins', CheckinController.store);
 routes.get('/students/:id/help-orders', StudentHelpOrderController.index);
 routes.post('/students/:id/help-orders', StudentHelpOrderController.store);
 
+routes.get('/students/:id', StudentController.show);
+
 routes.use(authMiddleware);
 routes.put('/users', UserController.update);
 
 routes.post('/students', StudentController.store);
 routes.put('/students/:id', StudentController.update);
 routes.get('/students', StudentController.index);
-routes.get('/students/:id', StudentController.show);
 routes.delete('/students/:id', StudentController.delete);
 
 routes.post('/plans', PlanController.store);
