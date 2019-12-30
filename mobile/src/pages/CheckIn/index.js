@@ -92,7 +92,3 @@ export default function CheckIn() {
     </Container>
   );
 }
-
-CheckIn.navigationOptions = {
-  tabBarLabel: 'Check-In',
-};

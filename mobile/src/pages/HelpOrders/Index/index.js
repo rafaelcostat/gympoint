@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useSelector } from 'react-redux';
+import { withNavigationFocus } from 'react-navigation';
 import { parseISO, formatRelative } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import PropTypes from 'prop-types';
@@ -23,7 +24,7 @@ import {
 
 import api from '~/services/api';
 
-export default function HelpOrders({ navigation }) {
+function HelpOrders({ navigation, isFocused }) {
   const [helpOrders, setHelpOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const student = useSelector(state => state.auth.student);
@@ -32,7 +33,6 @@ export default function HelpOrders({ navigation }) {
     try {
       setRefreshing(true);
       const response = await api.get(`/students/${student.id}/help-orders`);
-      console.tron.log(response.data);
       const data = response.data.map(helpOrder => ({
         ...helpOrder,
         formattedDate: formatRelative(
@@ -53,6 +53,11 @@ export default function HelpOrders({ navigation }) {
   useEffect(() => {
     loadHelpOrders();
   }, [loadHelpOrders]);
+
+  useEffect(() => {
+    loadHelpOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   return (
     <Container>
@@ -94,4 +99,7 @@ HelpOrders.propTypes = {
     navigate: PropTypes.func,
     addListener: PropTypes.func,
   }).isRequired,
+  isFocused: PropTypes.bool.isRequired,
 };
+
+export default withNavigationFocus(HelpOrders);

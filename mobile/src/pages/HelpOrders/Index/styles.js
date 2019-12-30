@@ -27,13 +27,13 @@ export const HelpOrder = styled.TouchableOpacity`
 export const HelpOrderHeader = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 export const Answered = styled.Text`
   color: ${props => (props.answered ? '#42CB59' : '#999999')};
   font-weight: bold;
   font-size: 14px;
-  line-height: 16px;
   margin-left: 8px;
 `;
 
@@ -42,7 +42,6 @@ export const HelpOrderDate = styled.Text`
   text-align: right;
   color: #666;
   font-size: 14px;
-  line-height: 16px;
 `;
 
 export const Question = styled.Text`
