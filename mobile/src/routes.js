@@ -61,7 +61,7 @@ export default (signedIn = false) =>
               inactiveTintColor: '#999999',
               labelStyle: {
                 fontSize: 14,
-                marginTop: -15,
+                marginTop: -20,
               },
               style: {
                 backgroundColor: '#fff',
