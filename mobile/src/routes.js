@@ -61,12 +61,13 @@ export default (signedIn = false) =>
               inactiveTintColor: '#999999',
               labelStyle: {
                 fontSize: 14,
-                marginTop: -20,
+                marginTop: -10,
+                marginBottom: 10,
               },
               style: {
                 backgroundColor: '#fff',
                 borderTopColor: '#dddddd',
-                height: 70,
+                height: 65,
               },
             },
           }

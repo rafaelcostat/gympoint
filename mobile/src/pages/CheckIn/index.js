@@ -53,7 +53,6 @@ export default function CheckIn() {
   async function handleCheckIn() {
     try {
       const { data } = await api.post(`/students/${student.id}/checkins`);
-      console.tron.log(data);
 
       const newCheckIns = [
         {
