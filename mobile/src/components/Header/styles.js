@@ -11,6 +11,10 @@ export const Container = styled.View`
   padding-top: 5px;
 `;
 
+export const Logo = styled.View`
+  flex-direction: row;
+`;
+
 export const LogoImage = styled.Image`
   width: 36px;
   height: 18px;
@@ -22,4 +26,9 @@ export const LogoText = styled.Text`
   font-weight: bold;
   color: #ee4e62;
   margin-left: 8px;
+`;
+
+export const SignOutButton = styled.TouchableOpacity`
+  position: absolute;
+  right: 20px;
 `;
