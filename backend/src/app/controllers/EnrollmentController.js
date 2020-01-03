@@ -49,11 +49,12 @@ class EnrollmentController {
   }
 
   async index(req, res) {
-    const { page = 1 } = req.query;
-    const enrollments = await Enrollment.findAll({
+    const { page = 1, limit = 10 } = req.query;
+
+    const { rows: enrollments, count } = await Enrollment.findAndCountAll({
       order: [['updated_at', 'desc']],
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit,
+      offset: (page - 1) * limit,
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
       include: [
         {
@@ -69,7 +70,7 @@ class EnrollmentController {
       ],
     });
 
-    return res.json(enrollments);
+    return res.set({ total: count }).json(enrollments);
   }
 
   async update(req, res) {

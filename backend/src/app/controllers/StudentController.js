@@ -3,23 +3,6 @@ import { Op } from 'sequelize';
 import Student from '../models/Student';
 
 class StudentController {
-  async index(req, res) {
-    const { page = 1, q: query = '' } = req.query;
-    const students = await Student.findAll({
-      order: ['name'],
-      limit: 20,
-      where: {
-        [Op.or]: [
-          { name: { [Op.iLike]: `%${query}%` } },
-          { email: { [Op.iLike]: `%${query}%` } },
-        ],
-      },
-      offset: (page - 1) * 20,
-    });
-
-    return res.json(students);
-  }
-
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -59,6 +42,24 @@ class StudentController {
       weight,
       height,
     });
+  }
+
+  async index(req, res) {
+    const { page = 1, limit = 10, q: query = '' } = req.query;
+
+    const { rows: students, count } = await Student.findAndCountAll({
+      order: ['name'],
+      limit,
+      where: {
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${query}%` } },
+          { email: { [Op.iLike]: `%${query}%` } },
+        ],
+      },
+      offset: (page - 1) * limit,
+    });
+
+    return res.set({ total: count }).json(students);
   }
 
   async show(req, res) {

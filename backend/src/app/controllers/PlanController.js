@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import Plan from '../models/Plan';
 import { Op } from 'sequelize';
+import Plan from '../models/Plan';
 
 class PlanController {
   async store(req, res) {
@@ -29,17 +29,18 @@ class PlanController {
   }
 
   async index(req, res) {
-    const { page = 1, q: query = '' } = req.query;
-    const plans = await Plan.findAll({
+    const { page = 1, limit = 10, q: query = '' } = req.query;
+
+    const { rows: plans, count } = await Plan.findAndCountAll({
       order: ['id'],
       where: {
         [Op.or]: [{ title: { [Op.iLike]: `%${query}%` } }],
       },
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit,
+      offset: (page - 1) * limit,
     });
 
-    return res.json(plans);
+    return res.set({ total: count }).json(plans);
   }
 
   async show(req, res) {

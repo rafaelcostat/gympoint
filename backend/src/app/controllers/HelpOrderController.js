@@ -40,12 +40,12 @@ class HelpOrderController {
   }
 
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
 
-    const helpOrders = await HelpOrder.findAll({
+    const { rows: helpOrders, count } = await HelpOrder.findAndCountAll({
       where: { answer: null },
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit,
+      offset: (page - 1) * limit,
       include: [
         {
           model: Student,
@@ -56,7 +56,7 @@ class HelpOrderController {
       order: [['created_at']],
     });
 
-    return res.json(helpOrders);
+    return res.set({ total: count }).json(helpOrders);
   }
 }
 
