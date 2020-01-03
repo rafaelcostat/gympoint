@@ -16,7 +16,9 @@ export const HelpOrdersList = styled.FlatList.attrs({
   margin-top: 10px;
 `;
 
-export const HelpOrder = styled.TouchableOpacity`
+export const HelpOrder = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.5,
+})`
   padding: 20px;
   margin-top: 10px;
   border-radius: 4px;
@@ -48,4 +50,15 @@ export const Question = styled.Text`
   margin-top: 16px;
   line-height: 20px;
   font-size: 14px;
+`;
+
+export const Empty = styled.Text`
+  margin-top: 30px;
+  font-size: 22px;
+  text-align: center;
+  color: #bbb;
+`;
+
+export const Loading = styled.View`
+  margin-top: 15px;
 `;

@@ -7,17 +7,21 @@ import Enrollment from '../models/Enrollment';
 class StudentHelpOrderController {
   async index(req, res) {
     const { page = 1 } = req.query;
-
     const { id } = req.params;
+    const limit = 10;
 
-    const helpOrders = await HelpOrder.findAll({
+    const { rows, count } = await HelpOrder.findAndCountAll({
       where: { student_id: id },
-      order: [['created_at', 'desc']],
-      limit: 20,
-      offset: (page - 1) * 20,
+      order: [['created_at', 'DESC']],
+      limit,
+      offset: (page - 1) * limit,
     });
 
-    return res.json(helpOrders);
+    return res.json({
+      total_pages: Math.ceil(count / limit),
+      count,
+      rows,
+    });
   }
 
   async store(req, res) {

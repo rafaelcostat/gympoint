@@ -44,6 +44,7 @@ export default function HelpOrderNew({ navigation }) {
           multiline
           value={question}
           onChangeText={setQuestion}
+          autoFocus
         />
         <SubmitButton onPress={handleSubmit} disabled={disabled}>
           Enviar pedido

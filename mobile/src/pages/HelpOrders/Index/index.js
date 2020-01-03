@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
 import { withNavigationFocus } from 'react-navigation';
 import { parseISO, formatRelative } from 'date-fns';
@@ -20,6 +20,8 @@ import {
   Answered,
   HelpOrderDate,
   Question,
+  Empty,
+  Loading,
 } from './styles';
 
 import api from '~/services/api';
@@ -27,13 +29,19 @@ import api from '~/services/api';
 function HelpOrders({ navigation, isFocused }) {
   const [helpOrders, setHelpOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+
   const student = useSelector(state => state.auth.student);
 
-  const loadHelpOrders = useCallback(async () => {
+  async function loadHelpOrders(newPage) {
     try {
       setRefreshing(true);
-      const response = await api.get(`/students/${student.id}/help-orders`);
-      const data = response.data.map(helpOrder => ({
+      const { data } = await api.get(`/students/${student.id}/help-orders`, {
+        params: { page: newPage },
+      });
+
+      const list = data.rows.map(helpOrder => ({
         ...helpOrder,
         formattedDate: formatRelative(
           parseISO(helpOrder.createdAt),
@@ -42,22 +50,38 @@ function HelpOrders({ navigation, isFocused }) {
         ),
       }));
 
-      setHelpOrders(data);
+      setHelpOrders(newPage >= 2 ? [...helpOrders, ...list] : list);
+      setTotalPages(data.total_pages);
+      setPage(newPage);
     } catch (error) {
       Alert.alert('Erro ao listar pedidos de auxílio', 'Tente novamente');
     } finally {
       setRefreshing(false);
     }
-  }, [student.id]);
+  }
 
   useEffect(() => {
-    loadHelpOrders();
-  }, [loadHelpOrders]);
+    loadHelpOrders(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    loadHelpOrders();
+    loadHelpOrders(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
+
+  function loadMore() {
+    const nextPage = page + 1;
+
+    if (totalPages >= nextPage) {
+      loadHelpOrders(nextPage);
+    }
+  }
+
+  function refreshList() {
+    setHelpOrders([]);
+    loadHelpOrders(1);
+  }
 
   return (
     <Container>
@@ -69,8 +93,10 @@ function HelpOrders({ navigation, isFocused }) {
         <HelpOrdersList
           data={helpOrders}
           keyExtractor={helpOrder => String(helpOrder.id)}
+          onEndReachedThreshold={0.1}
+          onEndReached={loadMore}
           refreshing={refreshing}
-          onRefresh={loadHelpOrders}
+          onRefresh={refreshList}
           renderItem={({ item }) => (
             <HelpOrder
               onPress={() => navigation.navigate('HelpOrderShow', { item })}>
@@ -88,6 +114,16 @@ function HelpOrders({ navigation, isFocused }) {
               <Question>{item.question}</Question>
             </HelpOrder>
           )}
+          ListEmptyComponent={
+            <Empty>Nenhum pedido de auxílio realizado.</Empty>
+          }
+          ListFooterComponent={
+            refreshing && (
+              <Loading>
+                <ActivityIndicator color="#ee4e62" />
+              </Loading>
+            )
+          }
         />
       </Content>
     </Container>
