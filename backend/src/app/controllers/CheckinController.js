@@ -2,7 +2,6 @@ import { subDays, isAfter } from 'date-fns';
 import { Op } from 'sequelize';
 
 import Checkin from '../models/Checkin';
-import Student from '../models/Student';
 import Enrollment from '../models/Enrollment';
 
 class CheckinController {
@@ -44,22 +43,20 @@ class CheckinController {
   async index(req, res) {
     const { id } = req.params;
     const { page = 1 } = req.query;
+    const limit = 20;
 
-    const checkins = await Checkin.findAll({
+    const { rows, count } = await Checkin.findAndCountAll({
       where: { student_id: id },
-      order: [['created_at', 'desc']],
-      limit: 20,
-      offset: (page - 1) * 20,
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['id', 'name', 'email'],
-        },
-      ],
+      order: [['created_at', 'DESC']],
+      limit,
+      offset: (page - 1) * limit,
     });
 
-    return res.json(checkins);
+    return res.json({
+      total_pages: Math.ceil(count / limit),
+      count,
+      rows,
+    });
   }
 }
 

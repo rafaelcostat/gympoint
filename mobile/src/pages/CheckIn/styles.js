@@ -7,6 +7,7 @@ export const Container = styled.SafeAreaView`
 
 export const Content = styled.View`
   padding: 20px;
+  flex: 1;
 `;
 
 export const CheckInList = styled.FlatList.attrs({
@@ -34,4 +35,15 @@ export const Number = styled.Text`
 export const Time = styled.Text`
   font-size: 14px;
   color: #666;
+`;
+
+export const Empty = styled.Text`
+  margin-top: 30px;
+  font-size: 22px;
+  text-align: center;
+  color: #bbb;
+`;
+
+export const Loading = styled.View`
+  margin-top: 15px;
 `;
