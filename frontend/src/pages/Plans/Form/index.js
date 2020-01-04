@@ -10,7 +10,7 @@ import Container from '~/components/Container';
 import Header from '~/components/PageHeader';
 import FormWrapper from '~/components/FormWrapper';
 import LinkButton from '~/components/LinkButton';
-import CurrencyInput from '~/components/CurrencyInput';
+import NumberInput from '~/components/NumberInput';
 
 import api from '~/services/api';
 import history from '~/services/history';
@@ -106,25 +106,26 @@ export default function PlanForm() {
               <Input
                 name="duration"
                 id="duration"
-                type="text"
+                type="number"
                 placeholder="Duração"
                 label="Duração"
                 onChange={e => setPlanDuration(e.target.value)}
               />
             </div>
             <div>
-              <CurrencyInput
+              <NumberInput
                 name="price"
-                value={planPrice}
-                onChange={(masked, raw) => setPlanPrice(raw)}
+                prefix="R$"
+                onChange={value => setPlanPrice(value)}
                 label="PREÇO MENSAL"
               />
             </div>
 
             <div>
-              <CurrencyInput
+              <NumberInput
                 name="totalPrice"
                 value={totalPrice}
+                prefix="R$"
                 label="PREÇO TOTAL"
                 disabled
               />

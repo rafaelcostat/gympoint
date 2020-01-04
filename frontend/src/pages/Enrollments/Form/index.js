@@ -12,7 +12,7 @@ import FormWrapper from '~/components/FormWrapper';
 import LinkButton from '~/components/LinkButton';
 import Select from '~/components/SelectInput';
 import DatePickerInput from '~/components/DatePickerInput';
-import CurrencyInput from '~/components/CurrencyInput';
+import NumberInput from '~/components/NumberInput';
 
 import api from '~/services/api';
 import history from '~/services/history';
@@ -81,7 +81,7 @@ export default function EnrollmentForm() {
 
       setPlans(data);
       return data;
-    } catch (_) {
+    } catch (error) {
       return toast.error('Erro ao carregar os planos.');
     } finally {
       setLoading(false);
@@ -124,7 +124,7 @@ export default function EnrollmentForm() {
 
         toast.success('Matrícula editada com sucesso.');
         history.push('/enrollments');
-      } catch (_) {
+      } catch (error) {
         toast.error('Não foi possível editar a matrícula.');
       } finally {
         setLoading(false);
@@ -138,7 +138,7 @@ export default function EnrollmentForm() {
 
         toast.success('Matrícula cadastrado com sucesso.');
         history.push('/enrollments');
-      } catch (_) {
+      } catch (error) {
         toast.error('Não foi possível realizar a matrícula.');
       } finally {
         setLoading(false);
@@ -213,9 +213,10 @@ export default function EnrollmentForm() {
               />
             </div>
             <div>
-              <CurrencyInput
+              <NumberInput
                 name="totalPrice"
                 value={totalPrice}
+                prefix="R$"
                 label="PREÇO TOTAL"
                 disabled
               />

@@ -13,6 +13,7 @@ import Header from '~/components/PageHeader';
 import FormWrapper from '~/components/FormWrapper';
 import LinkButton from '~/components/LinkButton';
 import DatePicker from '~/components/DatePickerInput';
+import NumberInput from '~/components/NumberInput';
 
 import api from '~/services/api';
 import history from '~/services/history';
@@ -120,16 +121,20 @@ export default function StudentForm() {
               <DatePicker name="birth" label="DATA DE NASCIMENTO" />
             </div>
             <div>
-              <label htmlFor="weight">Peso (em kg)</label>
-              <Input name="weight" id="weight" type="text" placeholder="Peso" />
+              <NumberInput
+                name="weight"
+                id="weight"
+                placeholder="Peso"
+                decimalScale={1}
+                label="Peso (em kg)"
+              />
             </div>
             <div>
-              <label htmlFor="height">Altura</label>
-              <Input
+              <NumberInput
                 name="height"
-                id="height"
-                type="text"
                 placeholder="Altura"
+                format="#,##"
+                label="Altura"
               />
             </div>
           </div>
