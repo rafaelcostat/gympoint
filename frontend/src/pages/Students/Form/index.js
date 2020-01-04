@@ -44,8 +44,9 @@ export default function StudentForm() {
         toast.error('Erro ao carregar o aluno');
       }
     }
-
-    loadStudent();
+    if (id) {
+      loadStudent();
+    }
   }, [id]);
 
   async function handleSubmit(data) {

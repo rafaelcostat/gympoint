@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { MdAdd, MdSearch } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import Pagination from 'rc-pagination';
 
 import { Content, Search } from './styles';
 import Container from '~/components/Container';
 import Header from '~/components/PageHeader';
+import PaginationContainer from '~/components/PaginationContainer';
 import { Table, EditLink, DeleteButton } from '~/components/Table';
 import LinkButton from '~/components/LinkButton';
 
@@ -13,19 +15,36 @@ import api from '~/services/api';
 export default function Students() {
   const [loading, setLoading] = useState(false);
   const [students, setStudents] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(1);
+  const [filter, setFilter] = useState('');
+
+  const pageSize = 5;
 
   useEffect(() => {
     async function loadStudents() {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const response = await api.get('students');
+        const response = await api.get('students', {
+          params: {
+            page,
+            limit: pageSize,
+            q: filter,
+          },
+        });
 
-      setStudents(response.data);
-      setLoading(false);
+        setStudents(response.data);
+        setTotal(Number(response.headers.total));
+      } catch (error) {
+        toast.error('Erro ao carregar matrículas');
+      } finally {
+        setLoading(false);
+      }
     }
 
     loadStudents();
-  }, []);
+  }, [filter, page]);
 
   async function deleteStudent(student) {
     try {
@@ -49,20 +68,12 @@ export default function Students() {
     }
   }
 
-  async function fecthStudents(search) {
-    try {
-      const { data } = await api.get('students', {
-        params: { q: search },
-      });
-
-      setStudents(data);
-    } catch (err) {
-      toast.error(err);
-    }
+  function handlePagination(currentPage) {
+    setPage(currentPage);
   }
 
   function handleSearch(e) {
-    fecthStudents(e.target.value);
+    setFilter(e.target.value);
   }
 
   return (
@@ -120,6 +131,14 @@ export default function Students() {
             )}
           </tbody>
         </Table>
+        <PaginationContainer>
+          <Pagination
+            onChange={handlePagination}
+            pageSize={pageSize}
+            current={page}
+            total={total}
+          />
+        </PaginationContainer>
       </Content>
     </Container>
   );

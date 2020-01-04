@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { MdAdd, MdCheckCircle } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import Pagination from 'rc-pagination';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 
 import Container from '~/components/Container';
 import Header from '~/components/PageHeader';
 import LinkButton from '~/components/LinkButton';
+import PaginationContainer from '~/components/PaginationContainer';
 import { Table, EditLink, DeleteButton } from '~/components/Table';
 
 import api from '~/services/api';
@@ -16,13 +18,22 @@ import { Content } from './styles';
 export default function Enrollments() {
   const [loading, setLoading] = useState(false);
   const [enrollments, setEnrollments] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(1);
+
+  const pageSize = 5;
 
   useEffect(() => {
     async function loadEnrollments() {
       try {
         setLoading(true);
 
-        const response = await api.get('enrollments');
+        const response = await api.get('enrollments', {
+          params: {
+            page,
+            limit: pageSize,
+          },
+        });
 
         const data = response.data.map(enrollment => ({
           ...enrollment,
@@ -39,15 +50,16 @@ export default function Enrollments() {
         }));
 
         setEnrollments(data);
+        setTotal(Number(response.headers.total));
       } catch (error) {
         toast.error('Erro ao carregar matrículas');
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     loadEnrollments();
-  }, []);
+  }, [page]);
 
   async function deleteEnrollment(enrollment) {
     try {
@@ -71,6 +83,10 @@ export default function Enrollments() {
     if (del) {
       deleteEnrollment(enrollment);
     }
+  }
+
+  function handlePagination(currentPage) {
+    setPage(currentPage);
   }
 
   return (
@@ -140,6 +156,14 @@ export default function Enrollments() {
             )}
           </tbody>
         </Table>
+        <PaginationContainer>
+          <Pagination
+            onChange={handlePagination}
+            pageSize={pageSize}
+            current={page}
+            total={total}
+          />
+        </PaginationContainer>
       </Content>
     </Container>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
+import Pagination from 'rc-pagination';
 import { formatDistanceStrict, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
 import pt from 'date-fns/locale/pt';
@@ -9,22 +10,30 @@ import Container from '~/components/Container';
 import Header from '~/components/PageHeader';
 import { Table, EditLink, DeleteButton } from '~/components/Table';
 import LinkButton from '~/components/LinkButton';
+import PaginationContainer from '~/components/PaginationContainer';
 
 import api from '~/services/api';
 import { formatPrice } from '~/util/format';
 
-// import { Container } from './styles';
-
 export default function Plans() {
   const [loading, setLoading] = useState(false);
   const [plans, setPlans] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(1);
+
+  const pageSize = 5;
 
   useEffect(() => {
     async function loadPlans() {
       try {
         setLoading(true);
 
-        const response = await api.get('plans');
+        const response = await api.get('plans', {
+          params: {
+            page,
+            limit: pageSize,
+          },
+        });
 
         const data = response.data.map(plan => ({
           ...plan,
@@ -37,15 +46,16 @@ export default function Plans() {
         }));
 
         setPlans(data);
+        setTotal(Number(response.headers.total));
       } catch (error) {
         toast.error('Erro ao carregar planos');
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     loadPlans();
-  }, []);
+  }, [page]);
 
   async function deletePlan(plan) {
     try {
@@ -65,6 +75,10 @@ export default function Plans() {
     if (del) {
       deletePlan(plan);
     }
+  }
+
+  function handlePagination(currentPage) {
+    setPage(currentPage);
   }
 
   return (
@@ -116,6 +130,14 @@ export default function Plans() {
             )}
           </tbody>
         </Table>
+        <PaginationContainer>
+          <Pagination
+            onChange={handlePagination}
+            pageSize={pageSize}
+            current={page}
+            total={total}
+          />
+        </PaginationContainer>
       </Content>
     </Container>
   );

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-
+import Pagination from 'rc-pagination';
 import { Form, Input } from '@rocketseat/unform';
+
 import Container from '~/components/Container';
 import Header from '~/components/PageHeader';
 import { Table } from '~/components/Table';
 import ActionButton from '~/components/ActionButton';
+import PaginationContainer from '~/components/PaginationContainer';
+
 import { HelpModal, Content, Button } from './styles';
 
 import api from '~/services/api';
@@ -22,22 +25,33 @@ export default function HelpOrders() {
   const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedHelpOrder, setSelectedHelpOrder] = useState({});
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(1);
+
+  const pageSize = 5;
 
   useEffect(() => {
     async function loadHelpOrders() {
       try {
         setLoading(true);
-        const response = await api.get('/help-orders');
+        const response = await api.get('/help-orders', {
+          params: {
+            page,
+            limit: pageSize,
+          },
+        });
 
         setHelpOrders(response.data);
-        setLoading(false);
+        setTotal(Number(response.headers.total));
       } catch (error) {
         toast.error('Não foi possível carregar os pedidos de auxílio.');
+      } finally {
+        setLoading(false);
       }
     }
 
     loadHelpOrders();
-  }, []);
+  }, [page]);
 
   function handleAnswerHelpOrder(helpOrder) {
     setSelectedHelpOrder(helpOrder);
@@ -64,6 +78,10 @@ export default function HelpOrders() {
     } catch (error) {
       toast.error('Não foi possível responder à este pedido de ajuda.');
     }
+  }
+
+  function handlePagination(currentPage) {
+    setPage(currentPage);
   }
 
   return (
@@ -108,7 +126,16 @@ export default function HelpOrders() {
             )}
           </tbody>
         </Table>
+        <PaginationContainer>
+          <Pagination
+            onChange={handlePagination}
+            pageSize={pageSize}
+            current={page}
+            total={total}
+          />
+        </PaginationContainer>
       </Content>
+
       <HelpModal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
