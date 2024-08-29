@@ -1,5 +1,5 @@
 <h1 align="center">
-  Gympoint, bootcamp project
+  Gympoint
 </h1>
 
 ## Getting started
